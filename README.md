@@ -42,9 +42,14 @@ Other installations are possible, but not supported here.
 Your webhook server will receive a POST request with this kind of JSON body:
 ```json
 {
+    "customerId": 123,
     "conversationSubject": "Testing this sidebar",
     "conversationType": "Phone",
     "customerEmail": "hello@example.com",
+    "customerEmails": [
+      "hello@example.com",
+      "welcome@example.com"
+    ],
     "customerPhones": [{
 	    "n": "",
       "type": 1,
@@ -106,4 +111,4 @@ After you have checked all these things, please create an issue and detail how y
 
 ## Inspiration
 
-* This project was inspired by [Sidebar API](https://scoutdevs.com/downloads/sidebar-api/).
+* This project was inspired by [Sidebar API](https://github.com/scout-devs/SidebarApi).
