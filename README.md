@@ -1,5 +1,11 @@
 # FreeScout Sidebar Webhook
 
+This is a fork of [Joelhaggar's original](https://github.com/Joelhaggar/helpscout_to_freescout_migration), updated to be plug-and-play compatibile with [Helpscout Legacy Custom Apps](https://developer.helpscout.com/apps/legacy-custom-apps/dynamic/).
+
+The only notable difference is HelpScout uses an alphanumeric ID on mailboxes (e.g. "support") where FreeScout uses a numeric ID. This fork instead passes a slugified version of the mailbox name, which might be the same anyway.
+
+---
+
 Sidebar Webhook asynchronously injects HTML from your server into conversation sidebars.
 
 This screenshot shows what it does: you can load any content on a per-customer, per-message basis from your own web server, asynchronously, every time a conversation is loaded on the screen.
@@ -28,7 +34,7 @@ Other installations are possible, but not supported here.
    ```sh
    scp -r ~/Downloads/freescout-sidebar-webhook root@freescout.example.com:/var/www/html/Modules/SidebarWebhook/
    ```
-4. SSH into the server and update permissions on that folder. 
+4. SSH into the server and update permissions on that folder.
    ```sh
    chown -R www-data:www-data /var/www/html/Modules/SidebarWebhook/
    ```

@@ -82,27 +82,44 @@ class SidebarWebhookController extends Controller
                     break;
                 }
 
-                $payload = [
-                    'customerId'          => $customer->id,
-                    'customerEmail'       => $customer->getMainEmail(),
-                    'customerEmails'      => $customer->emails->pluck('email')->toArray(),
-                    'customerPhones'      => $customer->getPhones(),
-                    'conversationSubject' => $conversation->getSubject(),
-                    'conversationType'    => $conversation->getTypeName(),
-                    'mailboxId'           => $mailbox->id,
-                    'secret'              => empty($secret) ? '' : $secret,
-                ];
+				$payload = json_encode([
+					'ticket'   => [
+						'id'      => $conversation->id,
+						'number'  => $conversation->number,
+						'subject' => $conversation->getSubject(),
+					],
+					'customer' => [
+						'id'     => $customer->id,
+						'fname'  => $customer->first_name,
+						'lname'  => $customer->last_name,
+						'email'  => $customer->getMainEmail(),
+						'emails' => $customer->emails->pluck('email')->toArray(),
+					],
+					'user'     => [
+						'fname'        => \Auth::user()->first_name,
+						'lname'        => \Auth::user()->last_name,
+						'id'           => \Auth::user()->id,
+						'role'         => \Auth::user()->role,
+						'convRedirect' => 0,
+					],
+					'mailbox'  => [
+						'id'    => str_slug($mailbox->name, ''),
+						'email' => $mailbox->email,
+					],
+				]);
 
-                try {
-                    $client = new \GuzzleHttp\Client();
-                    $result = $client->post($url, [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'text/html',
-                        ],
-                        'body' => json_encode($payload),
-                    ]);
-                    $response['html'] = $result->getBody()->getContents();
+				try {
+                    $signature = base64_encode(hash_hmac('sha1', $payload, $secret, true));
+					$client = new \GuzzleHttp\Client();
+					$result = $client->post($url, [
+						'headers' => [
+							'Content-Type' => 'application/json',
+							'Accept'       => 'text/html',
+                            'x-Helpscout-Signature' => $signature,
+						],
+						'body'    => $payload,
+					]);
+                    $response = json_decode($result->getBody()->getContents(), true);
                     $response['status'] = 'success';
                 } catch (\Exception $e) {
                     $response['msg'] = 'Webhook error: ' . $e->getMessage();
