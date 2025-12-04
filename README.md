@@ -2,7 +2,29 @@
 
 This is a fork of [Joelhaggar's original](https://github.com/Joelhaggar/helpscout_to_freescout_migration), updated to be plug-and-play compatibile with [Helpscout Legacy Custom Apps](https://developer.helpscout.com/apps/legacy-custom-apps/dynamic/).
 
-The only notable difference is HelpScout uses an alphanumeric ID on mailboxes (e.g. "support") where FreeScout uses a numeric ID. This fork instead passes a slugified version of the mailbox name, which might be the same anyway.
+The biggest difference is HelpScout uses an alphanumeric ID on mailboxes (e.g. "support") where FreeScout uses a numeric ID. This fork instead passes a slugified version of the mailbox name, which might be the same anyway.
+
+The template is also tweaked to offer a little more flexibility - everything is presently popped into a .panel-body section, so padding is a little weird. Inserting a div slightly up the DOM gives some flexibility around adding multiple panels etc. You can pop accordions in your sidebar by including the relevant HTML:
+
+```html
+<div class="panel-group accordion accordion-empty">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href=".collapse-sidebar-widget">
+                    Title goes here
+                    <b class="caret"></b>
+                </a>
+            </h4>
+        </div>
+        <div class="collapse-sidebar-widget panel-collapse collapse in">
+            <div class="panel-body">
+                Content goes here
+            </div>
+        </div>
+    </div>
+</div>
+```
 
 ---
 
